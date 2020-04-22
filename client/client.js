@@ -3,14 +3,14 @@ console.log('hellow world');
 const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
 const API_URL = 'http://localhost:5000/mytwitter';
+const commentsElement = document.querySelector('.comments');
 
 
-loadingElement.style.display = 'none';
+loadingElement.style.display = '';
 
-function eraseText() {
-    document.getElementById("name").value = "";
-    document.getElementById("content").value = "";
-}
+
+listAllComments();
+
 
 form.addEventListener('submit', (event) => {
     event.preventDefault(); // prevents the text to get disappeared from the console
@@ -46,3 +46,35 @@ form.addEventListener('submit', (event) => {
         });
     // eraseText();
 });
+
+
+function eraseText() {
+    document.getElementById("name").value = "";
+    document.getElementById("content").value = "";
+}
+
+function listAllComments() {
+    fetch(API_URL)
+        .then(response => response.json())
+        .then(comments => {
+            console.log(comments);
+            comments.forEach(comments => {
+                const div = document.createElement('div');
+                const header = document.createElement('h3');
+                header.textContent = comments.name;
+
+                const contents = document.createElement('p');
+                contents.textContent = comments.content;
+
+                div.appendChild(header);
+                div.appendChild(contents);
+
+                commentsElement.appendChild(div);
+
+            });
+            loadingElement.style.display = 'none';
+
+        });
+
+
+}

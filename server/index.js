@@ -23,6 +23,15 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/mytwitter', (req, res) => {
+    comments
+        .find()
+        .then(comments => {
+            res.json(comments);
+        });
+
+});
+
 
 function isVAlidComment(comment) {
     return comment.name && comment.name.toString().trim() !== '' &&
