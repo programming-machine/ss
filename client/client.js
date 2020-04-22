@@ -2,7 +2,7 @@ console.log('hellow world');
 
 const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
-const API_URL = "http://localhost:5000/mytwitter";
+const API_URL = 'http://localhost:5000/mytwitter';
 
 
 loadingElement.style.display = 'none';
@@ -29,12 +29,17 @@ form.addEventListener('submit', (event) => {
     loadingElement.style.display = '';
 
     fetch(API_URL, {
-        method: 'post',
-        body: JSON.stringify(newComment),
-        headers: {
-            'content-type': 'application/json'
-        }
+            method: 'POST',
+            body: JSON.stringify(newComment),
+            headers: {
+                'content-type': 'application/json'
+            }
 
-    });
-    eraseText();
+
+        }).then(response => response.json())
+        .then(createdComment => {
+            console.log(createdComment);
+
+        });
+    // eraseText();
 });
