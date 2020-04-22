@@ -39,6 +39,9 @@ form.addEventListener('submit', (event) => {
         }).then(response => response.json())
         .then(createdComment => {
             console.log(createdComment);
+            form.reset();
+            form.style.display = '';
+            loadingElement.style.display = 'none';
 
         });
     // eraseText();
