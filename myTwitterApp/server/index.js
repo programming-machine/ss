@@ -1,16 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const monk = require('monk');
+var Filter = require('bad-words');
+const rateLimit = require("express-rate-limit");
+
 
 
 
 
 const app = express();
-const db = monk('localhost/mytwitter');
+const db = monk(process.env.MONGO_URI || 'localhost/mytwitter');
 const comments = db.get('perCom');
+const filter = new Filter();
 
 app.use(cors());
 app.use(express.json());
+
 
 
 app.listen(5000, () => {
@@ -38,13 +43,18 @@ function isVAlidComment(comment) {
         comment.content && comment.content.toString().trim() !== '';
 }
 
+app.use(rateLimit({
+    windowMs: 30 * 1000,
+    max: 1
+}));
+
 app.post('/mytwitter', (req, res) => {
 
     console.log(req.body);
     if (isVAlidComment(req.body)) {
         const comment = {
-            name: req.body.name.toString(),
-            content: req.body.content.toString(),
+            name: filter.clean(req.body.name.toString()),
+            content: filter.clean(req.body.content.toString()),
             created: new Date()
         };
         comments

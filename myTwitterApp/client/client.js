@@ -6,6 +6,8 @@ const API_URL = 'http://localhost:5000/mytwitter';
 const commentsElement = document.querySelector('.comments');
 
 
+
+
 loadingElement.style.display = '';
 
 
@@ -38,10 +40,15 @@ form.addEventListener('submit', (event) => {
 
         }).then(response => response.json())
         .then(createdComment => {
-            console.log(createdComment);
+
             form.reset();
-            form.style.display = '';
-            loadingElement.style.display = 'none';
+            setTimeout(() => {
+
+                form.style.display = '';
+            }, 30000);
+
+            listAllComments();
+            //loadingElement.style.display = 'none';
 
         });
     // eraseText();
@@ -54,20 +61,25 @@ function eraseText() {
 }
 
 function listAllComments() {
+    commentsElement.innerHTML = '';
     fetch(API_URL)
         .then(response => response.json())
         .then(comments => {
             console.log(comments);
-            comments.forEach(comments => {
+            comments.reverse();
+            comments.forEach(comment => {
                 const div = document.createElement('div');
                 const header = document.createElement('h3');
-                header.textContent = comments.name;
+                header.textContent = comment.name;
 
                 const contents = document.createElement('p');
-                contents.textContent = comments.content;
-
+                contents.textContent = comment.content;
+                const date = document.createElement('small');
+                date.textContent = new Date(comment.created);
                 div.appendChild(header);
                 div.appendChild(contents);
+                div.appendChild(date);
+
 
                 commentsElement.appendChild(div);
 
